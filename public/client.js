@@ -1,7 +1,13 @@
 /*global io*/
+
+
 /*jslint browser: true*/
 var socket = io();
 var i;
+var user = {
+  username : "",
+  password:""
+};
 
 /*** Fonctions utiles ***/
 
@@ -20,10 +26,29 @@ function scrollToBottom() {
  * Connexion de l'utilisateur
  * Uniquement si le username n'est pas vide et n'existe pas encore
  */
-$('#login form').submit(function (e) {
+ $('#login #signup').submit(function (e) {
   e.preventDefault();
-  var user = {
-    username : $('#login input').val().trim()
+   user = {
+    username : $('#signup #username_up').val().trim(),
+    email : $('#signup #email').val().trim(),
+    password:$('#signup #password_up').val().trim()
+  };
+  socket.emit('user-login', user, function (success) {
+    if (success) {
+      $('body').removeAttr('id'); // Cache formulaire de connexion
+      $('#chat input').focus(); // Focus sur le champ du message
+    }
+  });
+
+});
+
+
+
+$('#login #login').submit(function (e) {
+  e.preventDefault();
+   user = {
+    username : $('#login #username').val().trim(),
+    password:""
   };
   if (user.username.length > 0) { // Si le champ de connexion n'est pas vide
     socket.emit('user-login', user, function (success) {
@@ -41,6 +66,7 @@ $('#login form').submit(function (e) {
 $('#chat form').submit(function (e) {
   e.preventDefault();
   var message = {
+    sender : user.username,
     text : $('#m').val()
   };
   $('#m').val('');

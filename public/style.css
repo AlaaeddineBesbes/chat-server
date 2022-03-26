@@ -118,7 +118,7 @@ section#chat #users li span.typing {
 section#login {
     transition: all 0.5s;
     opacity: 0;
-    top: 35%;
+    top: 15%;
     text-align: center;
     position: fixed;
     width: 100%

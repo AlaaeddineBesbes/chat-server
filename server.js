@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-const Message = require('./models/message');
+var Message = require('./models/message');
 const User= require('./models/user');
 const mongoose = require('mongoose');
 
@@ -129,7 +129,11 @@ io.on('connection', function (socket) {
 
     // On ajoute le username au message et on émet l'événement
     message.username = loggedUser.username;
-    const msg = new Message(message);
+    const msg = new Message({
+      sender:message.username,
+      message:message.text,
+      reciever : ""
+    });
     msg.save().then(() => {
       io.emit('chat-message', message);
     })
